@@ -10,7 +10,7 @@ These instructions will allow you to make a copy of the project yourself, and ge
 
 RubyMine 2019.3, Ruby 2.6.6, and Rails 6.0.2.2 were used to initially make this project on a machine with PostgreSql installed locally.  The application was created as minimalistically as possible.  SQLite should work as well as any other database 
 
-### Creating
+## Creating
 
 Create the rails project on your system.  If you are trying PostgreSql for the first time you may need to execute in the terminal:
 
@@ -26,7 +26,7 @@ rails db:migrate
 
 If you run the server you should be able to visit localhost:3000 at this point.
 
-## Install Bootstrap
+### Install Bootstrap
 
 In the Terminal:
 
@@ -96,7 +96,7 @@ Update app > javascript > packs > application.js:
 import "./custom";
 ```
 
-## Install Devise
+### Install Devise
 
 Update Gemfile
 
@@ -129,7 +129,7 @@ In Terminal:
 rails db:migrate
 ```
 
-## Create Articles
+### Create Articles
 
 In Terminal:
 
@@ -167,7 +167,7 @@ Update app > models > article.rb:
 belongs_to :user
 ```
 
-## Install Pundit
+### Install Pundit
 
 Update Gemfile
 
@@ -237,56 +237,80 @@ class ArticlePolicy < ApplicationPolicy
 end
 ```
 
+Update app > controllers > articles_controller.rb:
+(authorize @articles for every action)
+:show, :edit, :update, and :destroy are done with set_article method.
+
+```
+def set_article
+  @article = Article.find(params[:id])
+  authorize @article
+end
+```
+
+then
+
+```
+def index
+  @articles = Article.all
+  authorize @articles
+end
+  
+def new
+  @article = Article.new
+  authorize @article
+end
+
+def create
+  @article = Article.new(article_params)
+  @article.user = current_user
+  authorize @article   
+  
+  ...
+end
+```
+
+Update app > controllers > application_controller.rb:
+
+```
+
+  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+
+  private
+
+  def user_not_authorized
+    flash[:warning] = "You are not authorized to perform this action."
+    redirect_to(request.referrer || root_path)
+  end
+  
+```
+
 ## Running the tests
 
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
+Tests to come at a later date.  Want to write some?
 
 ## Deployment
 
-Add additional notes about how to deploy this on a live system
+Should easily deploy to Heroku.  Instructions for that at a later date if needed.
 
 ## Built With
 
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+* [Ruby](https://www.ruby-lang.org/en/) - Language
+* [Ruby on Rails](https://rubyonrails.org) - MVC Framework
+* [RubyMine](https://www.jetbrains.com/ruby/) - IDE
+* [PostgreSQL](https://www.postgresql.org) - Database
+* [Devise](https://github.com/heartcombo/devise) - Authentication Gem
+* [Pundit](https://github.com/varvet/pundit) - Authorization Gem
+* [Bootstrap](https://getbootstrap.com) - Web Framework
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
+If you want to ...
 
 ## Authors
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+* **Jeremy Hastings** - *Initial work* - [Jeremy Hastings](https://github.com/jeremyhastings/)
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
+This project is licensed under the GNU General Public License 3.0 License - see the [LICENSE.md](LICENSE.md) file for details

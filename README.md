@@ -1,6 +1,6 @@
 # Rails 6 Simple Pundit Authorization Application
 
-This project is a demonstration of a Rails 6 application with Devise for authentication and Pundit for authorization.  In addition, a simple implementation of Bootstrap being installed into Webpack using Yarn.
+This project is a demonstration of a Rails 6 application with Devise for authentication and Pundit for authorization.  In addition, a simple implementation of Bootstrap being installed into Webpack using Yarn.  In the end you should have an application that will allow everyone to look at the article#index, allow registered users to view article#show and create new articles via article#new, and only allow the owners of articles to edit and delete articles via article#edit and article#destroy.
 
 ## Getting Started
 

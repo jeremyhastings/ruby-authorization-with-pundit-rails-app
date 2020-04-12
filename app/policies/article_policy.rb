@@ -20,5 +20,5 @@ class ArticlePolicy < ApplicationPolicy
   def article
     record
   end
-  
+
 end

@@ -1,27 +1,27 @@
-# Project Title
+# Rails 6 Simple Pundit Authorization Application
 
-One Paragraph of project description goes here
+This project is a demonstration of a Rails 6 application with Devise for authentication and Pundit for authorization.  In addition, a simple implementation of Bootstrap being installed into Webpack using Yarn.
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+These instructions will allow you to make a copy of the project yourself, and get it up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+RubyMine 2019.3, Ruby 2.6.6, and Rails 6.0.2.2 were used to initially make this project on a machine with PostgreSql installed locally.  The application was created as minimalistically as possible.  SQLite should work as well as any other database 
+
+### Creating
+
+Create the rails project on your system.  If you are trying PostgreSql for the first time you may need to execute in the terminal:
 
 ```
-Give examples
+rails db:create
 ```
 
-### Installing
-
-A step by step series of examples that tell you how to get a development env running
-
-Say what the step will be
+followed by:
 
 ```
-Give the example
+rails db:migrate
 ```
 
 And repeat

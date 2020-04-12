@@ -24,13 +24,218 @@ followed by:
 rails db:migrate
 ```
 
-And repeat
+If you run the server you should be able to visit localhost:3000 at this point.
+
+## Install Bootstrap
+
+In the Terminal:
 
 ```
-until finished
+yarn add bootstrap jquery popper.js
+```
+Update config > webpack > environment.js:
+
+```
+const { environment } = require('@rails/webpacker')
+
+const webpack = require("webpack")
+environment.plugins.append("Provide", new webpack.ProvidePlugin({
+    $: 'jquery',
+    jQuery: 'jquery',
+    Popper: ['popper.js', 'default']
+}))
+
+module.exports = environment
 ```
 
-End with an example of getting some data out of the system or using it for a little demo
+Update app > javascript > packs > application.js:
+
+```
+import "bootstrap";
+```
+
+Create app > javascript > stylesheets > application.scss:
+
+```
+@import "bootstrap";
+```
+
+Update app > views > layouts > application.html.erb:
+
+```
+<%= stylesheet_link_tag ... %>
+```
+to
+```
+<%= stylesheet_pack_tag ... %>
+```
+
+Update app > javascript > packs > application.js:
+
+```
+import "../stylesheets/application";
+```
+
+Create app > javascript > packs > custom.js:
+
+```
+// For Bootstrap //////////////////////////
+$(function() {
+    $('[data-toggle="tooltip"]').tooltip();
+});
+
+$(function() {
+    $('[data-toggle="popover"]').popover();
+});
+// For Bootstrap //////////////////////////
+```
+
+Update app > javascript > packs > application.js:
+
+```
+import "./custom";
+```
+
+## Install Devise
+
+Update Gemfile
+
+```
+# Use Devise for Authentication
+gem 'devise'
+```
+
+In Terminal:
+
+```
+bundle install
+```
+
+In Terminal:
+
+```
+rails generate devise:install
+```
+
+In Terminal:
+
+```
+rails generate devise User
+```
+
+In Terminal:
+
+```
+rails db:migrate
+```
+
+## Create Articles
+
+In Terminal:
+
+```
+rails generate scaffold Articles title body:text
+```
+
+In Terminal:
+
+```
+rails db:migrate
+```
+
+In Terminal:
+
+```
+rails generate migration add_user_id_to_articles user:references
+```
+
+In Terminal:
+
+```
+rails db:migrate
+```
+
+Update app > models > user.rb:
+
+```
+has_many :articles
+```
+
+Update app > models > article.rb:
+
+```
+belongs_to :user
+```
+
+## Install Pundit
+
+Update Gemfile
+
+```
+# Use Pundit for Authorisation
+gem 'pundit'
+```
+
+In Terminal:
+
+```
+bundle install
+```
+
+Update app > controllers > application.rb:
+
+```
+class ApplicationController < ActionController::Base
+  include Pundit
+end
+```
+
+In Terminal:
+
+```
+rails generate pundit:install
+```
+
+Create app > policies > article_policy.rb:
+
+```
+class ArticlePolicy < ApplicationPolicy
+
+  def index?
+    true # Anyone can look
+  end
+
+  def show?
+    user.present? # Only logged in user
+  end
+
+  def create?
+    user.present? # Only logged in user
+  end
+
+  def new
+    create?
+  end
+
+  def update?
+    return true if user.present? && user == article.user # If there is a logged in user and that user is the article owner
+  end
+
+  def edit?
+    update?
+  end
+
+  def destroy?
+    return true if user.present? && user == article.user # If there is a logged in user and that user is the article owner
+  end
+
+  private
+  def article
+    record
+  end
+
+end
+```
 
 ## Running the tests
 
